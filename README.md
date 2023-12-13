@@ -1,2 +1,1 @@
-# redis-shenanigans
- 
+trying out redis cache with go.
