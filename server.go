@@ -88,7 +88,7 @@ func getPost(w http.ResponseWriter, r *http.Request) {
 }
 
 func saveToMongo(id string, doc bson.M) error {
-	client, collection := connectToMongo()
+	client, collection := getMongoClientAndCollection()
 	defer client.Disconnect(context.Background())
 
 	idInt, _ := strconv.Atoi(id)
@@ -105,7 +105,7 @@ func saveToMongo(id string, doc bson.M) error {
 }
 
 func getFromMongo(id string) (bson.M, error) {
-	client, collection := connectToMongo()
+	client, collection := getMongoClientAndCollection()
 	defer client.Disconnect(context.Background())
 
 	idInt, _ := strconv.Atoi(id)
@@ -147,7 +147,7 @@ func getFromRedis(postID string) (string, error) {
 	return val, nil
 }
 
-func connectToMongo() (*mongo.Client, *mongo.Collection) {
+func getMongoClientAndCollection() (*mongo.Client, *mongo.Collection) {
 	clientOptions := options.Client().ApplyURI(mongoURI)
 	client, err := mongo.Connect(context.TODO(), clientOptions)
 
