@@ -63,14 +63,14 @@ func getPost(w http.ResponseWriter, r *http.Request) {
 				handleError(w, "Error decoding JSON", err)
 				return
 			}
+			go saveToMongo(id, result)
 
-			_ = saveToMongo(id, result)
 		} else {
 			fmt.Printf("==== DB HIT ON %s ====\n", redisKey+id)
 			result = res
 		}
 
-		_ = saveToRedis(redisKey+id, result)
+		go saveToRedis(redisKey+id, result)
 	} else {
 		fmt.Printf("==== CACHE HIT ON %s ====\n", redisKey+id)
 		err := json.Unmarshal([]byte(val), &result)
